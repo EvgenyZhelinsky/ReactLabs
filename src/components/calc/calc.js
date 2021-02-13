@@ -2,77 +2,75 @@ class Calc extends React.Component {
 
     constructor(props) {
         super();
-        Logger.consoleMessage('constructor');
         this.state = {
             show: '...',
         };
     }
-
-    componentDidMount() {
-        //Logger.consoleMessage('componentDidMount');
-        // var _this = this;
-        // var intervalId = setInterval(function () {
-        //     _this.setState({text: new Date()})
-
-        // }, 10);
-        // setTimeout(()=> {
-        //     clearInterval (intervalId);
-        //     _this.setState({text: 'stopped'})
-
-        // }, 5000);
-
-
-
-    }
-
-    //onButtonClick = (buttonName) => {
-
-    // Logger.consoleMessage(buttonName);
-    //}
+    pm = '+';
+    result = 0;
+    stopped = false;
     final = function () {
-        if (this.znak === ' + ') {
-            this.setState({ show: this.first + this.res });
+        if (this.operationValue === ' + ') {
+            this.result = this.second + this.input;
         }
-        else if (this.znak === ' - ') {
-            this.setState({ show: this.first - this.res });
+        else if (this.operationValue === ' - ') {
+            this.result = this.second - this.input;
         }
-        else if (this.znak === ' * ') {
-            this.setState({ show: this.first * this.res });
+        else if (this.operationValue === ' * ') {
+            this.result = this.second * this.input;
         }
-        else if ((this.znak === ' / ') && (this.res != 0)) {
-            this.setState({ show: this.first / this.res });
+        else if ((this.operationValue === ' / ') && (this.input != 0)) {
+            this.result = this.second / this.input;
         }
         else {
-            this.setState({ show: 'Error!!!!!'});  
+            this.result = 'Error!!!!!';
+            this.stopped = true;
+        }
+        this.second = this.result;
+        this.setState({ show: this.result });
+        this.input = 0;
+    }
+    operationValue = '';
+    input = 0;
+    second = '';
+    number = function (inputNumber) {
+        if (this.stopped == false) {
+            this.input = this.input * 10 + inputNumber;
+            if (this.pm === '-') {
+                this.input = this.input * (-1);
+            }
+            this.setState({ show: this.second + this.operationValue + this.input });
         }
     }
-    znak = 0;
-    res = 0;
-    operationValue = '';
-    first = '';
-    number = function (inputNumber) {
-        this.res = this.res * 10 + inputNumber;
-        this.setState({ show: this.first + this.operationValue + this.res });
-    }
-    
+
     operation = function (inputValue) {
-        this.znak = inputValue;
-        this.operationValue = inputValue;
-        this.first = this.res;
-        this.res = 0;
-        this.setState({ show: this.first + this.operationValue });
+        if (this.stopped == false) {
+            this.operationValue = inputValue;
+            this.second = this.input + this.result;
+            this.input = 0;
+            this.pm = '+';
+            this.setState({ show: this.second + this.operationValue });
+        }
     }
-    restart = function () {
-        this.first = '';
-        this.res = 0;
+    clear = function () {
+        this.second = '';
+        this.input = 0;
         this.operationValue = '';
         this.setState({ show: '...' });
     }
-
+    plusMinus = function () {
+        if (this.pm === '-') {
+            this.pm = '+';
+            this.setState({ show: this.second + this.operationValue });
+        }
+        else {
+            this.pm = '-';
+            this.setState({ show: this.second + this.operationValue + ' -' });
+        }
+    }
     render() {
         var stay = this.state;
         var self = this;
-        //Logger.consoleMessage('render');
         return React.createElement('div', {},
             React.createElement('h1', { id: 'main' }, stay.show),
             React.createElement('button', { onClick: function () { self.number(1); }, type: 'button', }, '1'),
@@ -85,12 +83,14 @@ class Calc extends React.Component {
             React.createElement('button', { onClick: function () { self.number(8); }, type: 'button', }, '8'),
             React.createElement('button', { onClick: function () { self.number(9); }, type: 'button', }, '9'),
             React.createElement('button', { onClick: function () { self.number(0); }, type: 'button', }, '0'),
+            React.createElement('button', { onClick: function () { self.plusMinus(); }, type: 'button', }, '+-'),
+            React.createElement('button', {  }, '.'),
             React.createElement('button', { onClick: function () { self.operation(' + '); }, type: 'button', }, '+'),
             React.createElement('button', { onClick: function () { self.operation(' - '); }, type: 'button', }, '-'),
             React.createElement('button', { onClick: function () { self.operation(' * '); }, type: 'button', }, '*'),
             React.createElement('button', { onClick: function () { self.operation(' / '); }, type: 'button', }, '/'),
             React.createElement('button', { onClick: function () { self.final(); }, type: 'button', }, '='),
-            React.createElement('button', { onClick: function () { self.restart(); }, type: 'button', }, 'restart')
+            React.createElement('button', { onClick: function () { self.clear(); }, type: 'button', }, 'C')
         )
     }
 }
