@@ -1,0 +1,24 @@
+#main {
+    color:rgb(168, 41, 41);
+    margin: auto;
+    font-size: 80px;
+    font-style: georgia;
+}
+button {
+    color:rgb(233, 233, 233);
+    background-color: rgb(47, 73, 88);
+    margin-right: 9px;
+    margin-bottom: 9px;
+    font-size: 37px;
+    font-style: georgia;
+    border-radius: 14px;
+    width: 65px;
+    height: 50px;
+    
+}
+#final {
+    height: 50px;
+}
+#oo {
+    width: 138px;
+}
